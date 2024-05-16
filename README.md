@@ -5,14 +5,14 @@
 The objective of this project is to properly retrive all the important data about each student.
 - [x] name
 - [x] rarity
-- [ ] school
-- [ ] role
-- [ ] damage type
-- [ ] armor type
-- [ ] combat class
-- [ ] area affinity
-- [ ] weapon type
-- [ ] equipments
+- [x] school
+- [x] role
+- [x] damage type
+- [x] armor type
+- [x] combat class
+- [x] area affinity
+- [x] weapon type
+- [x] equipments
 - [ ] how to obtain
 - [ ] max stats (atk, accuracy, stability, attack speed, etc) at lvl 90, UE50 and max equipment
 - [ ] affection 50 bonus

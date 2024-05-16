@@ -1,11 +1,14 @@
 const { text } = require("./shiroko.json").parse;
 
 function getStudent() {
-	const {
-		groups: { studentName },
-	} = /class=\"character-name character-header\"\s?title=\".*\">(?<studentName>\w*\s?_?\(?\w*\)?)/gim.exec(
-		text
-	);
+
+	const studentName = (() => {
+		const { groups: { en, jp }, } =
+			(/<th>Full Name<\/th><td>(?<en>[\w\p{L}\s]*)(?:<br \/>|\s*)\((?<jp>[\w\p{L}\s]*)\)<\/td>/gisu.exec(
+				text
+			));
+		return { en, jp };
+	})();
 
 	const {
 		groups: { studentRarity },
@@ -25,30 +28,66 @@ function getStudent() {
 	
 	const {
 		groups: { studentDamageType },
-	} = /(?:<tr><th>Damage Type<\/th>\s*<td.*?>)(?<studentDamageType>[^<]*)(?:<\/td>)/gis.exec(text);
+	} = /(?:<tr><th>Damage Type<\/th>\s*<td.*?>)(?<studentDamageType>[^<]*)(?:<\/td>)/gis.exec(
+		text
+	);
 
 	const {
 		groups: { studentArmorType },
-	} = /(?:<tr><th>Damage Type<\/th>\s*<td.*?>)(?<studentArmorType>[^<]*)(?:<\/td>)/gis.exec(text);
+	} = /(?:<tr><th>Armor Type<\/th>\s*<td.*?>)(?<studentArmorType>[^<]*)(?:<\/td>)/gis.exec(
+		text
+	);
 
 	const {
 		groups: { studentCombatClass },
-	} = /(?:<tr><th>Combat Class<\/th>\s*<td.*?>)(?<studentCombatClass>[^<]*)(?:<\/td>)/gis.exec(text);
+	} = /(?:<tr><th>Combat Class<\/th>\s*<td.*?>)(?<studentCombatClass>[^<]*)(?:<\/td>)/gis.exec(
+		text
+	);
 
-	const studentAffinities = {
-		urban: undefined,
-		field: undefined,
-		indoors: undefined,
-	};
-	([
-		studentAffinities.urban,
-		studentAffinities.field,
-		studentAffinities.indoors
-	] = text.matchAll(/(\w+)(?: grade affinity)/gis).map(a => a[1]));
+	const studentAffinities = (() => {
+		let [urban, field, indoors] = text.matchAll(/(\w+)(?: grade affinity)/gis).map(a => a[1]);
+		return { urban: urban, field: field, indoors: indoors };
+	})();
 
+	/* TO-DO:
+	 * - Change to map
+	 * - Add weapon name
+	 * - Add weapon image
+	 */
+	const {
+		groups: { studentWeaponType },
+	} = /(?:"weapon-text".*?figcaption>)(?<studentWeaponType>.*?)(?:<\/figcaption>)/gimus.exec(
+		text
+	);
 	
+	const studentUsesCover = /<span title="Uses cover">/gimus.test(text);
 
-	
+	const studentEquipment = [
+		...text.matchAll(/<td class="equipment equipment-\d" data-value="(.*?)">/gimus)
+			.map(equipment => equipment[1])
+	];
+
+	/* Partially implemented.
+	 * Missing:
+	 * - Equipment stats (heavy use of HTML markup and styling...)
+	 */
+	const studentUniqueGear = (() => {
+		const {
+			groups: { gearName, icon, descriptionEn, descriptionJp },
+		} = /"geartable-summary".*?<img.*?src="(?<icon>.*?)".*?"gear-name-main".*?>(?<gearName>.*?)<\/span>.*?"gear-description".*?"English".*?p.*?>(?<descriptionEn>.*?)<\/p>.*?"Japanese".*?p.*?>(?<descriptionJp>.*?)<\/p>/gimus.exec(
+			text
+		);
+		return {
+			name: gearName,
+			icon: `https:${icon}`,
+			description: {
+				en: descriptionEn,
+				jp: descriptionJp,
+			},
+		};
+	})();
+
+
 
 	return {
 		studentName,
@@ -61,6 +100,10 @@ function getStudent() {
 		studentArmorType,
 		studentCombatClass,
 		studentAffinities,
+		studentWeaponType,
+		studentUsesCover,
+		studentEquipment,
+		studentUniqueGear,
 	};
 }
 
