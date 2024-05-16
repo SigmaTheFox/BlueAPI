@@ -60,7 +60,7 @@ function getStudent() {
 		text
 	);
 	
-	const studentUsesCover = /<span title="Uses cover">/gimus.test(text);
+	const studentUsesCover = /<span title="Uses cover">/imus.test(text);
 
 	const studentEquipment = [
 		...text.matchAll(/<td class="equipment equipment-\d" data-value="(.*?)">/gimus)
