@@ -69,8 +69,10 @@ function getStudent() {
 
 	/* Partially implemented.
 	 * Missing:
+	 * - Error handling -- for students without unique gear
 	 * - Equipment stats (heavy use of HTML markup and styling...)
 	 */
+	/*
 	const studentUniqueGear = (() => {
 		const {
 			groups: { gearName, icon, descriptionEn, descriptionJp },
@@ -86,6 +88,7 @@ function getStudent() {
 			},
 		};
 	})();
+	*/
 
 
 
@@ -103,7 +106,7 @@ function getStudent() {
 		studentWeaponType,
 		studentUsesCover,
 		studentEquipment,
-		studentUniqueGear,
+		/* studentUniqueGear, */
 	};
 }
 
