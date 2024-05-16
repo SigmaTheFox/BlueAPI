@@ -45,7 +45,7 @@ function getStudent() {
 	);
 
 	const studentAffinities = (() => {
-		let [urban, field, indoors] = text.matchAll(/(\w+)(?: grade affinity)/gis).map(a => a[1]);
+		let [urban, field, indoors] = [... text.matchAll(/(\w+)(?: grade affinity)/gis)].map(a => a[1]);
 		return { urban: urban, field: field, indoors: indoors };
 	})();
 
@@ -63,7 +63,7 @@ function getStudent() {
 	const studentUsesCover = /<span title="Uses cover">/imus.test(text);
 
 	const studentEquipment = [
-		...text.matchAll(/<td class="equipment equipment-\d" data-value="(.*?)">/gimus)
+		... [... text.matchAll(/<td class="equipment equipment-\d" data-value="(.*?)">/gimus)]
 			.map(equipment => equipment[1])
 	];
 
